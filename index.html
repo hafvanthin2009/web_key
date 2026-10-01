@@ -1,236 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>Nhận Key | Umohvt Bot</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background: linear-gradient(135deg, #4B79F6 0%, #7B61FF 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .card { background: #fff; border-radius: 24px; padding: 35px 25px; width: 100%; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); text-align: center; }
-        .icon-x { font-size: 60px; color: #ff4444; margin-bottom: 15px; }
-        .icon-check { font-size: 60px; color: #22C55E; margin-bottom: 15px; }
-        h2 { font-size: 26px; font-weight: bold; color: #1a1a2e; margin-bottom: 10px; }
-        .desc { color: #888; font-size: 15px; margin-bottom: 25px; }
-        .btn { display: block; border: none; border-radius: 12px; padding: 14px; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; text-align: center; text-decoration: none; }
-        .btn-primary { background: linear-gradient(90deg, #4B79F6, #7B61FF); color: #fff; }
-        .btn-green { background: #22C55E; color: #fff; }
-        .btn-outline { background: transparent; color: #4B79F6; border: 1px solid #4B79F6; margin-top: 10px; }
-        .key-box { background: #f0f4ff; border-radius: 14px; padding: 20px; margin: 20px 0; border: 2px solid #4B79F6; }
-        .key-text { font-size: 22px; font-weight: bold; color: #22C55E; font-family: monospace; letter-spacing: 2px; word-break: break-all; }
-        .copy-btn { background: #4B79F6; color: #fff; border: none; border-radius: 10px; padding: 10px 20px; font-weight: bold; cursor: pointer; margin-top: 12px; }
-        .note { color: #ff9800; margin-top: 15px; font-weight: 500; }
-        .cmd-box { background: #f1f2f6; padding: 12px; border-radius: 10px; font-family: monospace; font-size: 16px; color: #2d3436; margin: 15px 0; word-break: break-all; }
-        .hidden { display: none !important; }
-        .admin-link { position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.2); color: #fff; border: none; padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        .admin-card { background: #fff; border-radius: 24px; padding: 30px 25px; width: 100%; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
-        .count-box { background: #f0f4ff; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 25px; }
-        .count-num { font-size: 42px; font-weight: bold; color: #4B79F6; }
-        .admin-card h3 { font-size: 18px; margin: 20px 0 10px; text-align: left; }
-        .admin-card input { width: 100%; padding: 14px; border: 2px solid #111; border-radius: 10px; font-size: 16px; margin-bottom: 12px; }
-        .key-list { max-height: 250px; overflow-y: auto; background: #f9f9f9; border-radius: 10px; padding: 12px; margin: 15px 0; }
-        .key-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 8px; border-bottom: 1px solid #eee; }
-        .del-btn { color: #ff4444; border: none; background: none; cursor: pointer; font-size: 16px; }
-        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px; }
-        .modal-content { background: #fff; border-radius: 20px; padding: 25px; width: 100%; max-width: 360px; text-align: center; }
-        .modal-content input { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hoàn tất nhiệm vụ</title>
+  <meta name="theme-color" content="#0f172a">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:#f1f5f9;color:#0f172a}
+    .card{width:min(440px,100%);background:#fff;border-radius:22px;padding:30px;
+      box-shadow:0 12px 40px rgba(15,23,42,.12);text-align:center}
+    .icon{width:70px;height:70px;margin:0 auto 18px;border-radius:50%;
+      display:grid;place-items:center;background:#e2e8f0;font-size:30px}
+    h1{font-size:24px;margin:0 0 10px}
+    p{color:#64748b;line-height:1.55;margin:8px 0}
+    .status{margin:22px 0;padding:14px;border-radius:14px;background:#f8fafc;font-weight:600}
+    .ok{background:#ecfdf5;color:#047857}.err{background:#fef2f2;color:#b91c1c}
+    button{width:100%;border:0;border-radius:13px;padding:13px 16px;background:#0f172a;
+      color:white;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px}
+    .small{font-size:12px;color:#94a3b8;margin-top:18px}
+  </style>
 </head>
 <body>
-    <button class="admin-link" id="adminBtn" onclick="openLogin()">🔐 Admin</button>
+<main class="card">
+  <div id="icon" class="icon">⏳</div>
+  <h1>Hoàn tất nhiệm vụ</h1>
+  <p id="message">Đang xử lý...</p>
+  <div id="status" class="status">Đang chuẩn bị quay lại Telegram...</div>
+  <button id="back" type="button" hidden>Mở lại Telegram</button>
+  <p class="small">Mã nhiệm vụ chỉ được xử lý một lần ở bot.</p>
+</main>
 
-    <!-- Không có Token -->
-    <div id="noTokenView" class="card">
-        <div class="icon-x">✕</div>
-        <h2>Thiếu Thông Tin</h2>
-        <p class="desc">Vui lòng vào Bot gõ lệnh <b>/kiemtien</b> để nhận link</p>
-        <a href="https://t.me/Umohvt_bot" target="_blank" class="btn btn-primary">🤖 Vào Bot Telegram</a>
-    </div>
+<script>
+(() => {
+  // Chỉ sửa username bot tại đây, không có @.
+  const TELEGRAM_BOT_USERNAME = "Umohvt_bot";
+  const params = new URLSearchParams(location.search);
+  const task = (params.get("task") || "").trim();
 
-    <!-- Nhận Key Thành Công -->
-    <div id="successView" class="card hidden">
-        <div class="icon-check">✓</div>
-        <h2>Nhận Key Thành Công</h2>
-        <p class="desc">Sao chép key bên dưới và dùng trong Bot</p>
-        <div class="key-box">
-            <div class="key-text" id="keyDisplay">-</div>
-            <button class="copy-btn" onclick="copyKey()">📋 Sao Chép Key</button>
-        </div>
-        <p class="note">✅ Token đã được sử dụng — không nhận lại được key này</p>
-        <p style="margin-top:20px; color:#555;">Nhập lệnh sau vào Bot:</p>
-        <div class="cmd-box" id="cmdBox">-</div>
-        <button class="copy-btn" onclick="copyCmd()">📋 Sao Chép Lệnh</button>
-        <a href="https://t.me/Umohvt_bot" class="btn btn-green" style="margin-top:20px;">🤖 Vào Bot Nhập Lệnh</a>
-    </div>
+  const icon = document.getElementById("icon");
+  const message = document.getElementById("message");
+  const status = document.getElementById("status");
+  const back = document.getElementById("back");
 
-    <!-- Token Đã Dùng -->
-    <div id="usedView" class="card hidden">
-        <div class="icon-check" style="color:#999;">✓</div>
-        <h2>Đã Nhận Key</h2>
-        <p class="desc">Link này đã được sử dụng trước đó</p>
-        <div class="key-box">
-            <div class="key-text" id="usedKeyDisplay">-</div>
-            <button class="copy-btn" onclick="copyUsedKey()">📋 Sao Chép Key</button>
-        </div>
-        <a href="https://t.me/Umohvt_bot" class="btn btn-outline">🔄 Gõ /kiemtien để lấy link mới</a>
-    </div>
+  function state(type, title, text) {
+    status.textContent = title;
+    message.textContent = text;
+    status.className = "status " + (type || "");
+    icon.textContent = type === "ok" ? "✓" : type === "err" ? "!" : "⏳";
+  }
 
-    <!-- Hết Key -->
-    <div id="emptyView" class="card hidden">
-        <div class="icon-x">⚠️</div>
-        <h2>Hết Key</h2>
-        <p class="desc">Admin chưa thêm key mới, vui lòng thử lại sau</p>
-        <a href="https://t.me/Umohvt_bot" class="btn btn-outline">🔄 Quay lại Bot</a>
-    </div>
+  function telegramUrl() {
+    return "https://t.me/" + TELEGRAM_BOT_USERNAME +
+           "?start=" + encodeURIComponent("gt_" + task);
+  }
 
-    <!-- Bảng Quản Lý Admin -->
-    <div id="adminView" class="admin-card hidden">
-        <h2 style="text-align:center; margin-bottom:20px;">Bảng Quản Lý Admin</h2>
-        <div class="count-box">
-            <div class="count-num" id="keyCount">0</div>
-            <div style="color:#666; margin-top:5px;">Key Khả Dụng</div>
-        </div>
-        <h3>➕ Thêm Key Mới</h3>
-        <input type="text" id="newKeyInput" placeholder="Nhập key hoặc để trống tự tạo..." autocomplete="off" />
-        <button class="btn btn-green" onclick="addKey()">✅ Thêm Key</button>
-        <h3>📋 Danh Sách Key</h3>
-        <div class="key-list" id="keyListBox"></div>
-        <button class="btn btn-outline" onclick="logout()">🚪 Đăng Xuất</button>
-    </div>
+  function goTelegram() {
+    if (TELEGRAM_BOT_USERNAME === "Umohvt_bot") {
+      state("err", "Chưa cấu hình bot",
+            "Hãy sửa TELEGRAM_BOT_USERNAME trong index.html.");
+      back.hidden = false;
+      return;
+    }
+    location.replace(telegramUrl());
+  }
 
-    <!-- Modal Đăng Nhập -->
-    <div id="loginModal" class="modal hidden">
-        <div class="modal-content">
-            <h3>🔐 Đăng Nhập Admin</h3>
-            <input type="text" id="userInput" placeholder="Tên đăng nhập" autocomplete="off" />
-            <input type="password" id="passInput" placeholder="Mật khẩu" autocomplete="off" />
-            <button class="btn btn-green" onclick="doLogin()">Đăng Nhập</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeLogin()">Đóng</button>
-        </div>
-    </div>
+  back.addEventListener("click", goTelegram);
 
-    <script>
-        // === CẤU HÌNH ===
-        const ADMIN_USER = "hafvanthinh";
-        const ADMIN_PASS = "thinhhack123";
-        const STORAGE_KEY = "key_store_v5";
-        const USED_TOKENS = "used_tokens_v5";
-        
-        let isAdmin = false;
-        let keyList = [];
-        let currentToken = null;
+  if (!task) {
+    state("err", "Thiếu mã nhiệm vụ",
+          "Liên kết không có tham số task. Hãy mở lại link từ bot.");
+    return;
+  }
 
-        // === LƯU / TẢI DỮ LIỆU ===
-        function saveKeys() { localStorage.setItem(STORAGE_KEY, JSON.stringify(keyList)); }
-        function loadKeys() { const d = localStorage.getItem(STORAGE_KEY); return d ? JSON.parse(d) : []; }
-        function getUsedTokens() { const d = localStorage.getItem(USED_TOKENS); return d ? JSON.parse(d) : []; }
-        function markTokenUsed(token) { 
-            const arr = getUsedTokens(); 
-            if (!arr.includes(token)) { arr.push(token); localStorage.setItem(USED_TOKENS, JSON.stringify(arr)); }
-        }
-        function isTokenUsed(token) { return getUsedTokens().includes(token); }
+  // task_id do bot sinh ra chỉ chứa chữ thường và số.
+  if (!/^[a-z0-9]{8,200}$/.test(task)) {
+    state("err", "Mã nhiệm vụ không hợp lệ",
+          "Vui lòng mở lại liên kết từ bot Telegram.");
+    return;
+  }
 
-        // === TẠO KEY TỰ ĐỘNG ===
-        function genKey() {
-            const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-            let k = "";
-            for (let i = 0; i < 16; i++) { if (i && i % 4 === 0) k += "-"; k += c[Math.floor(Math.random() * c.length)]; }
-            if (keyList.some(x => (x.key || x) === k)) return genKey();
-            return k;
-        }
+  if (TELEGRAM_BOT_USERNAME === "Umohvt_bot") {
+    state("err", "Chưa cấu hình bot",
+          "Hãy sửa TELEGRAM_BOT_USERNAME trước khi dùng.");
+    back.hidden = false;
+    return;
+  }
 
-        // === SAO CHÉP ===
-        async function copyToClipboard(text, msg) {
-            try { await navigator.clipboard.writeText(text); alert(`✅ ${msg}`); }
-            catch {
-                const ta = document.createElement("textarea"); ta.value = text;
-                ta.style.position = "fixed"; ta.style.opacity = "0";
-                document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
-                alert(`✅ ${msg}`);
-            }
-        }
-        function copyKey() { copyToClipboard(document.getElementById("keyDisplay").textContent, "Đã sao chép Key!"); }
-        function copyCmd() { copyToClipboard(document.getElementById("cmdBox").textContent, "Đã sao chép Lệnh!"); }
-        function copyUsedKey() { copyToClipboard(document.getElementById("usedKeyDisplay").textContent, "Đã sao chép Key!"); }
+  state("ok", "Đã hoàn tất", "Đang mở Telegram để nhận kết quả...");
+  back.hidden = false;
 
-        // === CHUYỂN TRẠNG THÁI ===
-        function showView(name) {
-            ["noToken", "success", "used", "empty", "admin"].forEach(n => document.getElementById(n + "View").classList.add("hidden"));
-            document.getElementById(name + "View").classList.remove("hidden");
-        }
-
-        // === XỬ LÝ TOKEN — 1 TOKEN = 1 KEY ===
-        function processToken() {
-            const params = new URLSearchParams(window.location.search);
-            currentToken = params.get("token");
-            keyList = loadKeys();
-
-            if (isAdmin) { renderAdmin(); showView("admin"); return; }
-            if (!currentToken) { showView("noToken"); return; }
-            
-            // Token đã dùng → hiện key cũ
-            if (isTokenUsed(currentToken)) {
-                const savedKey = localStorage.getItem(`key_${currentToken}`);
-                if (savedKey) document.getElementById("usedKeyDisplay").textContent = savedKey;
-                showView("used");
-                return;
-            }
-
-            // Hết key
-            if (keyList.length === 0) { showView("empty"); return; }
-
-            // Token mới → lấy 1 key + xóa khỏi kho + đánh dấu đã dùng
-            const assignedKey = keyList.shift();
-            saveKeys();
-            markTokenUsed(currentToken);
-            localStorage.setItem(`key_${currentToken}`, assignedKey.key || assignedKey);
-
-            // Hiển thị thành công
-            document.getElementById("keyDisplay").textContent = assignedKey.key || assignedKey;
-            document.getElementById("cmdBox").textContent = `/rem ${assignedKey.key || assignedKey}`;
-            showView("success");
-        }
-
-        // === ADMIN ===
-        function openLogin() { document.getElementById("loginModal").classList.remove("hidden"); }
-        function closeLogin() { document.getElementById("loginModal").classList.add("hidden"); }
-        function doLogin() {
-            const u = document.getElementById("userInput").value.trim();
-            const p = document.getElementById("passInput").value;
-            if (u === ADMIN_USER && p === ADMIN_PASS) { isAdmin = true; closeLogin(); renderAdmin(); showView("admin"); }
-            else alert("❌ Sai tài khoản hoặc mật khẩu!");
-        }
-        function logout() { isAdmin = false; processToken(); }
-        function renderAdmin() {
-            keyList = loadKeys();
-            document.getElementById("keyCount").textContent = keyList.length;
-            const box = document.getElementById("keyListBox");
-            if (keyList.length === 0) { box.innerHTML = "<p style='color:#999;text-align:center;padding:20px;'>Chưa có key nào</p>"; return; }
-            box.innerHTML = keyList.map((item, idx) => `
-                <div class="key-item">
-                    <span style="font-family:monospace; color:#00b894;">${item.key || item}</span>
-                    <button class="del-btn" onclick="removeKey(${idx})">Xóa</button>
-                </div>`).join("");
-        }
-        function addKey() {
-            const input = document.getElementById("newKeyInput").value.trim();
-            const newKey = input || genKey();
-            if (!newKey) { alert("❌ Nhập key hoặc để trống!"); return; }
-            if (keyList.some(x => (x.key || x) === newKey)) { alert("❌ Key đã tồn tại!"); return; }
-            keyList.push({ key: newKey }); saveKeys();
-            document.getElementById("newKeyInput").value = ""; renderAdmin();
-            alert("✅ Đã thêm: " + newKey);
-        }
-        function removeKey(idx) {
-            if (!confirm("Xóa key này?")) return;
-            keyList.splice(idx, 1); saveKeys(); renderAdmin();
-        }
-
-        // === KHỞI TẠO ===
-        window.onload = processToken;
-    </script>
+  // Tự động quay về bot sau một khoảng rất ngắn.
+  setTimeout(goTelegram, 900);
+})();
+</script>
 </body>
 </html>
