@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Quản Lý Key | Umohvt Bot</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #4B79F6 0%, #7B61FF 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .error-card {
+            background: #fff; border-radius: 24px; padding: 40px 30px;
+            width: 100%; max-width: 380px; text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15); position: relative;
+        }
+        .lock-top-badge {
+            position: absolute; top: 15px; left: 15px;
+            background: #4B79F6; color: white; padding: 6px 14px;
+            border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer;
+        }
+        .error-icon { font-size: 60px; color: #ff4444; margin: 25px 0 15px; }
+        .error-title { font-size: 26px; font-weight: bold; color: #1a1a2e; margin-bottom: 10px; }
+        .error-desc { color: #888; font-size: 15px; margin-bottom: 30px; }
+        .bot-btn {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: linear-gradient(90deg, #2588f0, #0099ff);
+            color: white; text-decoration: none; padding: 15px;
+            border-radius: 14px; font-weight: bold; font-size: 17px;
+        }
+        .bot-btn:active { transform: scale(0.97); }
+
+        .key-card {
+            background: #fff; border-radius: 24px; padding: 35px 25px;
+            width: 100%; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .page-title { text-align: center; font-size: 22px; font-weight: bold; color: #1a1a2e; margin-bottom: 5px; }
+        .page-sub { text-align: center; color: #888; font-size: 14px; margin-bottom: 25px; }
+        .key-box { background: #1e1e38; border-radius: 16px; padding: 20px; margin: 15px 0; }
+        .key-row {
+            display: flex; align-items: center; gap: 10px;
+        }
+        .key-text {
+            flex: 1; color: #00ff88; font-size: 18px; font-weight: bold;
+            letter-spacing: 1px; font-family: 'Courier New', monospace; word-break: break-all;
+        }
+        .copy-btn {
+            background: #4B79F6; color: white; border: none; border-radius: 8px;
+            padding: 10px 16px; font-weight: bold; cursor: pointer; font-size: 15px;
+        }
+        .note-one { color: #ffcc00; text-align: center; font-weight: bold; margin-top: 12px; font-size: 15px; }
+        .cmd-box {
+            background: #f1f2f6; padding: 12px; border-radius: 10px;
+            text-align: center; font-family: 'Courier New', monospace;
+            font-size: 15px; color: #2d3436; margin: 15px 0;
+        }
+        .btn {
+            display: block; border: none; border-radius: 12px; padding: 14px;
+            font-weight: bold; font-size: 16px; cursor: pointer; width: 100%;
+            margin-top: 12px; text-align: center; text-decoration: none;
+        }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+        .btn-refresh { background: transparent; color: #4B79F6; border: 1px solid #4B79F6; }
+        .btn-admin { background: #00b894; color: white; }
+        .divider { height: 1px; background: #eee; margin: 20px 0; }
+        .hidden { display: none !important; }
+
+        .admin-card {
+            background: #fff; border-radius: 24px; padding: 30px 25px;
+            width: 100%; max-width: 420px; box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #333; font-size: 16px; }
+        .form-group input { width: 100%; padding: 14px; border: 2px solid #111; border-radius: 10px; font-size: 18px; }
+        .stats-row { display: flex; gap: 10px; margin: 15px 0; }
+        .stat-col { flex: 1; background: #f5f5f5; border-radius: 10px; padding: 15px 10px; text-align: center; }
+        .stat-num { font-size: 32px; font-weight: bold; color: #4B79F6; }
+        .stat-lab { font-size: 14px; color: #777; margin-top: 4px; }
+        .key-list {
+            max-height: 250px; overflow-y: auto; background: #f9f9f9;
+            border-radius: 10px; padding: 12px; margin: 15px 0;
+        }
+        .key-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 8px; border-bottom: 1px solid #eee; font-size: 14px;
+        }
+        .key-item-code { color: #00b894; font-family: monospace; font-weight: 600; }
+        .empty-text { color: #999; text-align: center; padding: 20px; }
+        .login-btn {
+            position: absolute; top: 15px; left: 15px;
+            background: rgba(255,255,255,0.2); color: white; border: none;
+            padding: 8px 14px; border-radius: 20px; font-weight: bold; cursor: pointer; z-index: 10;
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
+            padding: 20px; z-index: 100;
+        }
+        .modal { background: white; border-radius: 20px; padding: 25px; width: 100%; max-width: 360px; }
+        .modal h3 { text-align: center; margin-bottom: 20px; }
+        .close-btn {
+            margin-top: 10px; background: none; border: none; color: #888;
+            cursor: pointer; width: 100%; text-align: center; padding: 8px; font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <button class="login-btn" id="adminLoginBtn" onclick="openLogin()">🔐 Admin</button>
+
+    <div id="errorView" class="error-card">
+        <div class="lock-top-badge" onclick="openLogin()">🔐 Đăng Nhập</div>
+        <div class="error-icon">✕</div>
+        <h1 class="error-title">Thiếu Thông Tin</h1>
+        <p class="error-desc">Vui lòng truy cập qua link từ Bot để nhận key</p>
+        <a href="https://t.me/Umohvt_bot" class="bot-btn">🤖 Vào Bot Telegram</a>
+    </div>
+
+    <div id="keyView" class="key-card hidden">
+        <h2 class="page-title" id="keyViewTitle">Nhận Key</h2>
+        <p class="page-sub" id="keyViewSub">Nhấn nút bên dưới để lấy key</p>
+        <div id="keyContent"></div>
+    </div>
+
+    <div id="adminView" class="admin-card hidden">
+        <h2 class="page-title">Bảng Quản Lý Admin</h2>
+        
+        <div class="stats-row">
+            <div class="stat-col">
+                <div class="stat-num" id="keyCount">0</div>
+                <div class="stat-lab">Key Khả Dụng</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+        <h3 style="font-size:18px; font-weight:bold; margin-bottom:15px;">➕ Thêm Key Mới</h3>
+        <div class="form-group">
+            <label>Nhập Key</label>
+            <input type="text" id="keyInput" placeholder="Nhập key thủ công hoặc để trống tự tạo..." autocomplete="off" />
+        </div>
+        <button class="btn btn-admin" id="addKeyBtn" onclick="addKey()">✅ Thêm Key</button>
+
+        <div class="divider"></div>
+        <h3 style="font-size:18px; font-weight:bold; margin-bottom:15px;">📋 Danh Sách Key</h3>
+        <div class="key-list" id="keyListBox"></div>
+
+        <button class="btn btn-refresh" onclick="logout()">🚪 Đăng Xuất</button>
+    </div>
+
+    <div id="loginModal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3>🔐 Đăng Nhập Admin</h3>
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="userInput" autocomplete="off" />
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="passInput" autocomplete="off" />
+            </div>
+            <button class="btn btn-admin" onclick="doLogin()">Đăng Nhập</button>
+            <button class="close-btn" onclick="closeLogin()">✕ Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        // === CẤU HÌNH ===
+        const ADMIN_USER = "hafvanthin2009";
+        const ADMIN_PASS = "thinhhack123";
+        const BOT_LINK = "https://t.me/Umohvt_bot";
+        const STORAGE_KEY = "key_list_data_v2";
+        const CLAIMED_KEY = "user_claimed_status";
+        let isAdmin = false;
+        let keyList = [];
+
+        // === TẠO CHỮ KÝ CHỐNG SỬA DỮ LIỆU ===
+        function signData(data) {
+            const raw = JSON.stringify(data);
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) {
+                const char = raw.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0;
+            }
+            return hash.toString(36);
+        }
+
+        // === LƯU DỮ LIỆU ===
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(keyList));
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // === TẢI DỮ LIỆU ===
+        function loadData() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (!stored) return [];
+                return JSON.parse(stored) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        // === KIỂM TRA ĐÃ NHẬN KEY CHƯA ===
+        function hasClaimed() {
+            return localStorage.getItem(CLAIMED_KEY) === "true";
+        }
+        function markClaimed() {
+            localStorage.setItem(CLAIMED_KEY, "true");
+        }
+
+        // === TẠO KEY TỰ ĐỘNG ===
+        function genKey() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let key = "";
+            for (let i = 0; i < 16; i++) {
+                if (i > 0 && i % 4 === 0) key += "-";
+                key += chars[Math.floor(Math.random() * chars.length)];
+            }
+            if (keyList.some(item => item.key === key)) return genKey();
+            return key;
+        }
+
+        // === SAO CHÉP ===
+        async function copyText(text, label = "Nội dung") {
+            try {
+                await navigator.clipboard.writeText(text);
+                alert(`✅ Đã sao chép ${label}!`);
+            } catch {
+                const ta = document.createElement("textarea");
+                ta.value = text;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+                alert(`✅ Đã sao chép ${label}!`);
+            }
+        }
+
+        // === CHUYỂN TRANG ===
+        function showView(name) {
+            document.getElementById("errorView").classList.add("hidden");
+            document.getElementById("keyView").classList.add("hidden");
+            document.getElementById("adminView").classList.add("hidden");
+            document.getElementById(name + "View").classList.remove("hidden");
+        }
+
+        // === KIỂM TRA TRUY CẬP ===
+        function checkAccess() {
+            const params = new URLSearchParams(window.location.search);
+            const fromBot = params.get("from") === "bot";
+            
+            if (isAdmin) {
+                renderAdmin();
+                showView("admin");
+                return;
+            }
+
+            if (!fromBot) {
+                showView("error");
+                return;
+            }
+
+            if (hasClaimed()) {
+                showAlreadyClaimed();
+                return;
+            }
+
+            showGetKeyPage();
+        }
+
+        // === TRANG ĐÃ NHẬN ===
+        function showAlreadyClaimed() {
+            showView("key");
+            document.getElementById("keyViewTitle").textContent = "Đã Nhận Key";
+            document.getElementById("keyViewSub").textContent = "Mỗi thiết bị chỉ nhận 1 key";
+            document.getElementById("keyContent").innerHTML = `
+                <p style="color:#ff9800; padding:20px; font-weight:bold; font-size:16px; text-align:center;">
+                    ✅ Bạn đã nhận key rồi!<br><br>
+                    Mỗi thiết bị chỉ nhận được <b>1 lần duy nhất</b>.<br>
+                    Dùng thiết bị khác để nhận thêm.
+                </p>
+                <a href="${BOT_LINK}" class="btn btn-admin">🤖 Về Bot</a>
+            `;
+        }
+
+        // === TRANG LẤY KEY ===
+        function showGetKeyPage() {
+            showView("key");
+            document.getElementById("keyViewTitle").textContent = "Nhận Key Miễn Phí";
+            document.getElementById("keyViewSub").textContent = "Nhấn nút để lấy key ngay";
+            document.getElementById("keyContent").innerHTML = `
+                <button class="btn btn-admin" id="getKeyBtn" onclick="claimKey()">🎁 Nhận Key Ngay</button>
+                <p style="color:#888; margin-top:15px; font-size:13px; text-align:center;">
+                    ⚠️ Chỉ nhận được <b>1 key/1 thiết bị</b>
+                </p>
+            `;
+        }
+
+        // === NHẬN KEY ===
+        function claimKey() {
+            if (keyList.length === 0) {
+                document.getElementById("keyContent").innerHTML = `
+                    <p style="color:#ff4444; padding:20px; font-size:16px; text-align:center;">
+                        Hiện không còn key nào!<br>Vui lòng quay lại sau.
+                    </p>
+                    <a href="${BOT_LINK}" class="btn btn-refresh">🔄 Quay lại Bot</a>
+                `;
+                return;
+            }
+
+            const selected = keyList.shift();
+            if (!saveData()) {
+                alert("❌ Lỗi hệ thống! Thử lại.");
+                return;
+            }
+
+            markClaimed();
+            showKeyResult(selected.key);
+        }
+
+        // === HIỂN THỊ KẾT QUẢ — ĐÃ SỬA LỖI ===
+        function showKeyResult(key) {
+            showView("key");
+            document.getElementById("keyViewTitle").textContent = "✅ Key Của Bạn";
+            document.getElementById("keyViewSub").textContent = "Sao chép và dùng trong Bot";
+            
+            const lenh = `/rem ${key}`;
+            document.getElementById("keyContent").innerHTML = `
+                <div class="key-box">
+                    <div class="key-row">
+                        <span class="key-text">${escapeHtml(key)}</span>
+                        <button class="copy-btn" onclick="copyText('${escapeJs(key)}', 'Key')">Sao Chép</button>
+                    </div>
+                    <p class="note-one">✅ Đã ghi nhận — không lấy lại được key này</p>
+                </div>
+                <p style="color:#555; margin-top:20px; font-size:15px;">Nhập lệnh sau vào Bot:</p>
+                <div class="cmd-box">${escapeHtml(lenh)}</div>
+                <button class="btn btn-refresh" onclick="copyText('${escapeJs(lenh)}', 'Lệnh')">📋 Sao Chép Lệnh</button>
+                <a href="${BOT_LINK}" class="btn btn-admin" style="margin-top:20px;">🤖 Vào Bot Nhập Lệnh</a>
+            `;
+        }
+
+        // === ĐĂNG NHẬP ===
+        function openLogin() {
+            document.getElementById("loginModal").classList.remove("hidden");
+            document.getElementById("userInput").value = "";
+            document.getElementById("passInput").value = "";
+        }
+        function closeLogin() {
+            document.getElementById("loginModal").classList.add("hidden");
+        }
+        function doLogin() {
+            const u = document.getElementById("userInput").value.trim();
+            const p = document.getElementById("passInput").value;
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                isAdmin = true;
+                closeLogin();
+                renderAdmin();
+                showView("admin");
+            } else {
+                alert("❌ Sai tài khoản hoặc mật khẩu!");
+            }
+        }
+        function logout() {
+            isAdmin = false;
+            checkAccess();
+        }
+
+        // === HIỂN THỊ QUẢN LÝ ===
+        function renderAdmin() {
+            keyList = loadData();
+            document.getElementById("keyCount").textContent = keyList.length;
+            
+            const box = document.getElementById("keyListBox");
+            if (keyList.length === 0) {
+                box.innerHTML = '<p class="empty-text">Chưa có key nào được thêm</p>';
+                return;
+            }
+            box.innerHTML = keyList.map((item, idx) => `
+                <div class="key-item">
+                    <span class="key-item-code">${escapeHtml(item.key)}</span>
+                    <button style="border:none; background:none; color:#ff4444; cursor:pointer;" onclick="removeKey(${idx})">Xóa</button>
+                </div>
+            `).join("");
+        }
+
+        // === THÊM KEY — NHẬP THỦ CÔNG HOẶC TỰ TẠO ===
+        function addKey() {
+            const inputVal = document.getElementById("keyInput").value.trim();
+            const newKey = inputVal || genKey();
+            
+            if (!newKey) {
+                alert("❌ Vui lòng nhập key hoặc để trống tự tạo!");
+                return;
+            }
+            
+            if (keyList.some(item => item.key === newKey)) {
+                alert("❌ Key này đã tồn tại!");
+                return;
+            }
+
+            keyList.push({ key: newKey });
+            
+            if (!saveData()) {
+                alert("❌ Lưu thất bại!");
+                return;
+            }
+            
+            alert(`✅ Đã thêm thành công!\nKey: ${newKey}`);
+            document.getElementById("keyInput").value = "";
+            renderAdmin();
+        }
+
+        // === XÓA KEY ===
+        function removeKey(index) {
+            if (!confirm("Bạn có chắc muốn xóa key này?")) return;
+            keyList.splice(index, 1);
+            if (!saveData()) {
+                alert("❌ Xóa thất bại!");
+                return;
+            }
+            renderAdmin();
+        }
+
+        // === TRÁNH XSS ===
+        function escapeHtml(t) {
+            const d = document.createElement("div");
+            d.textContent = t;
+            return d.innerHTML;
+        }
+        function escapeJs(t) {
+            return String(t).replace(/[\\'"]/g, '\\$&');
+        }
+
+        // === KHỞI TẠO ===
+        window.onload = () => {
+            keyList = loadData();
+            checkAccess();
+        };
+        window.addEventListener("pageshow", () => {
+            if (!isAdmin) checkAccess();
+        });
+    </script>
+</body>
+</html>
